@@ -1,0 +1,137 @@
+config BR2_PACKAGE_OPENTHREAD
+	bool "openthread"
+	help
+	  OpenThread released by Google is an open-source implementation of Thread.
+
+	  https://openthread.io
+
+if BR2_PACKAGE_OPENTHREAD
+
+config BR2_PACKAGE_OPENTHREAD_BORDER_ROUTER
+	bool "border router"
+	depends on BR2_PACKAGE_SYSTEMD
+	depends on BR2_PACKAGE_WGET
+	depends on BR2_PACKAGE_IPROUTE2
+	depends on BR2_PACKAGE_IPUTILS
+	depends on BR2_PACKAGE_RSYSLOG
+	depends on BR2_PACKAGE_AVAHI
+	depends on BR2_PACKAGE_SYSTEMD_RESOLVED
+	depends on BR2_PACKAGE_IPTABLES
+	depends on BR2_PACKAGE_IPSET
+	select BR2_PACKAGE_AVAHI_DAEMON
+	select BR2_PACKAGE_READLINE
+	select BR2_PACKAGE_NCURSES
+	select BR2_PACKAGE_BOOST
+	select BR2_PACKAGE_BOOST_FILESYSTEM
+	select BR2_PACKAGE_BOOST_SYSTEM
+	select BR2_PACKAGE_DBUS
+	select BR2_PACKAGE_JSONCPP
+	select BR2_PACKAGE_PROTOBUF
+	help
+	  Build OpenThread Border Router
+
+if BR2_PACKAGE_OPENTHREAD_BORDER_ROUTER
+
+config BR2_PACKAGE_OPENTHREAD_BORDER_ROUTER_BORDER_ROUTING
+	bool "border routing"
+	help
+	  Enable Border Routing Manager
+
+# nat64
+config BR2_PACKAGE_OPENTHREAD_BORDER_ROUTER_NAT64
+	bool "nat64"
+	depends on BR2_PACKAGE_IPTABLES
+	help
+	  Enable NAT64 Support
+
+if BR2_PACKAGE_OPENTHREAD_BORDER_ROUTER_NAT64
+
+config BR2_PACKAGE_OPENTHREAD_POSIX_NAT64_CID
+	string "cid"
+	default "192.168.255.0/24"
+	help
+	  Set the CID
+
+choice
+	prompt "nat64 service"
+	default BR2_PACKAGE_OPENTHREAD_BORDER_ROUTER_NAT64_OPENTHREAD
+	help
+	  The default is the openthread implementation. However, you
+	  can select tayga if required.
+
+config BR2_PACKAGE_OPENTHREAD_BORDER_ROUTER_NAT64_OPENTHREAD
+	bool "openthread"
+	help
+	  Use the openthread implementation for NAT64.
+
+config BR2_PACKAGE_OPENTHREAD_BORDER_ROUTER_NAT64_TAYGA
+ 	bool "tayga"
+ 	depends on BR2_PACKAGE_TAYGA
+ 	help
+ 	  Use tayga for NAT64.
+
+endchoice
+
+endif
+
+# dns64
+config BR2_PACKAGE_OPENTHREAD_BORDER_ROUTER_DNS64
+	bool "dns64"
+	default n
+	depends on BR2_PACKAGE_DNSMASQ
+	depends on BR2_PACKAGE_BIND
+	help
+	  Enable DNS64 Support
+
+# network manager
+config BR2_PACKAGE_OPENTHREAD_BORDER_ROUTER_NETWORK_MANAGER
+	bool "network manager"
+	default n
+	depends on BR2_PACKAGE_DNSMASQ
+	depends on BR2_PACKAGE_NETWORK_MANAGER
+	help
+	  Enable Network Manager Support
+
+# dhcpd5
+config BR2_PACKAGE_OPENTHREAD_BORDER_ROUTER_DHCPV6_PD
+	bool "dhcpv6_pd"
+	default n
+	depends on BR2_PACKAGE_DHCPCD
+	help
+	  Prefix delegation support
+
+# reference device
+config BR2_PACKAGE_OPENTHREAD_BORDER_ROUTER_REFERENCE_DEVICE
+	bool reference_device
+	default n
+	depends on BR2_PACKAGE_RADVD
+	help
+	  Support reference device
+
+# backbone-router
+config BR2_PACKAGE_OPENTHREAD_BORDER_ROUTER_BACKBONE_ROUTER
+	bool "backbone router"
+	select BR2_PACKAGE_LIBNETFILTER_QUEUE
+	help
+	  Enable Backbone Router
+
+# web dependencies
+config BR2_PACKAGE_OPENTHREAD_BORDER_ROUTER_WEB_GUI
+	bool "web gui"
+	depends on BR2_PACKAGE_NODEJS
+	depends on BR2_PACKAGE_NODEJS_NPM
+	help
+	  Enable Web GUI
+
+config BR2_PACKAGE_OPENTHREAD_BORDER_ROUTER_REST_SERVER
+	bool "rest server"
+	default y
+	help
+	  Enable Rest Server
+
+config BR2_PACKAGE_OPENTHREAD_BORDER_ROUTER_INFRA_IF_NAME
+	string "infra interface name"
+
+endif
+
+endif
