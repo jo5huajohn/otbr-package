@@ -18,7 +18,7 @@ OPENTHREAD_CONF_OPTS = -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
 					   -DOTBR_DBUS=ON \
 					   -DOTBR_DNSSD_DISCOVERY_PROXY=ON \
 					   -DOTBR_SRP_ADVERTISING_PROXY=ON \
-					   -DOTBR_INFRA_IF_NAME=eth0 \
+					   -DOTBR_INFRA_IF_NAME=$(BR2_PACKAGE_OPENTHREAD_BORDER_ROUTER_INFRA_IF_NAME) \
 					   -DOTBR_MDNS=avahi \
 					   -DOTBR_VERSION= \
 					   -DOTBR_PACKAGE_VERSION=
@@ -73,12 +73,12 @@ OPENTHREAD_CMAKE_BACKEND = ninja
 
 # Work around to checkout to the tag and run git submodule
 define OPENTHREAD_EXTRACT_CMDS
-rm -rf $(@D)
-(git clone https://github.com/openthread/ot-br-posix $(@D) && \
- cd $(@D) && \
- git checkout $(OPENTHREAD_VERSION) && \
- git submodule update --init --recursive --depth 1)
-touch $(@D)/.stamp_downloaded
+	rm -rf $(@D)
+	(git clone https://github.com/openthread/ot-br-posix $(@D) && \
+	 cd $(@D) && \
+	 git checkout $() && \
+	 git submodule update --init --recursive --depth 1)
+	touch $(@D)/.stamp_downloaded
 endef
 
 $(eval $(cmake-package))
